@@ -5,8 +5,12 @@
 #include <iostream>
 #include <limits>
 #include <cstdio>
+#include <algorithm>
 
 using namespace std;
+
+void intVal(int&);
+void intVal(double&);
 
 class boxCircles
 {
@@ -21,14 +25,14 @@ public:
         cout << "Please enter the number of circles: ";
 
         // Integer input validation, get number of circles.
-        while (!(cin >> numCircle))
-        {
-            cin.clear();
-            // Remove every single invalid input till newline
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input" << endl;
-        }
+        intVal(numCircle);
         cout << "Number of circles: " << numCircle << endl;
+
+        if (numCircle <= 0)
+        {
+            cout << "No circles, exiting." << endl;
+            return;
+        }
 
         double arrc[numCircle * 3] = {0};
         double inputC = 0;
@@ -37,19 +41,14 @@ public:
         for (int q=0; q < (numCircle * 3); q++)
         {
             cout << "Circle: " << (q/3) + 1 << " Point: " << (q%3) + 1 << endl;
-            while (!(cin >> inputC))
-            {
-                cin.clear();
-                // Remove every single invalid input till newline.
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "Invalid input, try again" << endl;
-            }
+            intVal(inputC);
             arrc[q] = inputC;
         }
 
         // Arrays and var for loops.
         int arr2_size = sizeof(arrc)/sizeof(double);
-        double rectCoords[4] = {0}; // Output var dec.
+        // 0 and 2 are min x and y, 1 and 4 are max x and y.
+        double rectCoords[4] = {0}; // Output
         double circleCoords[4] = {0};
 
         // Assume only one circle exists.
@@ -66,16 +65,15 @@ public:
             circleCoords[2] = arrc[i+1] - arrc[i+2];
             circleCoords[3] = arrc[i+1] + arrc[i+2];
 
-            if (circleCoords[0] < rectCoords[0]) rectCoords[0] = circleCoords[0];
-            if (circleCoords[1] > rectCoords[1]) rectCoords[1] = circleCoords[1];
-            if (circleCoords[2] < rectCoords[2]) rectCoords[2] = circleCoords[2];
-            if (circleCoords[3] > rectCoords[3]) rectCoords[3] = circleCoords[3];
+            rectCoords[0] = min(circleCoords[0], rectCoords[0]);
+            rectCoords[1] = max(circleCoords[1], rectCoords[1]);
+            rectCoords[2] = min(circleCoords[2], rectCoords[2]);
+            rectCoords[3] = max(circleCoords[3], rectCoords[3]);
         }
 
         // Re-sync with cstdio just in case and print results.
         ios::sync_with_stdio(true);
         printf("(%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f) \n", rectCoords[0], rectCoords[2], rectCoords[0], rectCoords[3], rectCoords[1], rectCoords[3], rectCoords[1], rectCoords[2]);
-
     }
 };
 
@@ -97,28 +95,53 @@ int main()
     cout << "=========" << endl;
 
     cout << "Press 1 to start." << endl;
-    while (!(cin >> userInput) || (userInput != 1))
+
+    while (userInput != 1)
     {
-        cin.clear();
-        // Remove every single invalid input till newline
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "Invalid input, enter 1 to start." << endl;
+        intVal(userInput);
+
+        if (userInput != 1) cout << "Invalid input, try again." << endl;
     }
+
+    userInput = 2; // Reset userInput.
 
     do
     {
         obj.launch();
 
+        userInput = 2; // Reset userInput.
+
         cout << "Input 1 to restart the program, 0 to quit" << endl;
-        while (!(cin >> userInput) || (userInput < 0) || (userInput > 1))
+        while (userInput > 1 || userInput < 0)
         {
-            cin.clear();
-            // Remove every single invalid input till newline
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input" << endl;
+            intVal(userInput);
+
+            if (userInput > 1 || userInput < 0) cout << "Invalid input, try again." << endl;
         }
     }
     while (userInput == 1);
 
     return 0;
+}
+
+void intVal(int& userIn)
+{
+    while (!(cin >> userIn))
+    {
+        cin.clear();
+        // Remove every single invalid input till newline
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid input, try again." << endl;
+    }
+}
+
+void intVal(double& userIn)
+{
+    while (!(cin >> userIn))
+    {
+        cin.clear();
+        // Remove every single invalid input till newline
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid input, try again." << endl;
+    }
 }
