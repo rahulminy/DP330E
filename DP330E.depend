@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1532502849 source:c:\users\rahul\documents\codeblocksprojects\dp330e\main.cpp
+	<iostream>
+	<limits>
+	<cstdio>
+
