@@ -6,6 +6,7 @@
 #include <limits>
 #include <cstdio>
 #include <algorithm>
+#include <windows.h>
 
 using namespace std;
 
@@ -79,6 +80,9 @@ public:
 
 int main()
 {
+    // Opens command prompt.
+    system("");
+
     int userInput = 0;
     boxCircles obj;
 
