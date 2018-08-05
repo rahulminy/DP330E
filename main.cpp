@@ -81,7 +81,7 @@ public:
 int main()
 {
     // Opens command prompt.
-    system("");
+    //system("");
 
     int userInput = 0;
     boxCircles obj;
